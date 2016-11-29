@@ -1,3 +1,5 @@
+// this is just a tmp file in case DB will have a new column: originLocation
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 
-public class SmartCalendar {
+public class SmartCalendarTmp {
 	
 	//the main function is for testing.
 	public static void main(String[] args) {
@@ -27,8 +29,8 @@ public class SmartCalendar {
 		/*
 		 * this is to test the method getSimpleUserCalendar(...)
 		 */
-//		String getSimpleUserCalendar = getSimpleUserCalendar("smartcalendartestuser@gmail.com", conn).toString();
-//		System.out.println(getSimpleUserCalendar);
+//		String testUserCalendarSimple = getSimpleUserCalendar("smartcalendartestuser@gmail.com", conn).toString();
+//		System.out.println(testUserCalendarSimple);
 		
 		
 		/*
@@ -68,13 +70,6 @@ public class SmartCalendar {
 		 */
 //		String travelTime = getTravelTime("smartcalendartestuser@gmail.com", "Movie Night", conn).toString();
 //		System.out.println(travelTime + " minutes.");
-		
-		
-		/*
-		 * this is to test the method getOriginalLocation(...)
-		 */
-//		String location = getOriginalLocation("smartcalendartestuser@gmail.com", "Movie Night", conn);
-//		System.out.println(location);
 		
 		
 		/*
@@ -121,7 +116,7 @@ public class SmartCalendar {
 //				"Krispy Kreme", 1, 0, conn);
 		
 		
-	
+		
 		
 		//Following disconnect our program to the database.  
 		/*******MUST DELETE BEFORE SUBMITTING, WAIT UNTIL GRADED********/
@@ -262,7 +257,6 @@ public class SmartCalendar {
 	 *  				"alert":		0, 							//int,												Not Null
 	 *  				"trafficCheck":	0, 							//int, 												Not Null
 	 *  				"description":	NULL						//String
-	 *  				"originalLocation": "Washington, DC, USA"	//String							
 	 * 				},
 	 * 				{
 	 * 					...
@@ -308,7 +302,6 @@ public class SmartCalendar {
 				jsonTmp.put("trafficCheck", rs.getInt(11));
 //				jsonTmp.put("trafficCheck", rs.getObject(11));
 				jsonTmp.put("description", rs.getString(12));
-				jsonTmp.put("originalLocation", rs.getString(13));
 				
 				jsonArr.put(jsonTmp);
 			}
@@ -692,62 +685,6 @@ public class SmartCalendar {
 	
 	
 	/**
-	 * Given an eventName, this function returns the originalLocation of the event.
-	 * 
-	 * @param userID
-	 * @param eventName
-	 * @param conn
-	 * @return
-	 */
-	public static String getOriginalLocation(String userID, String eventName, Connection conn) {
-		String originalLocation = "";
-		
-		Statement stmt = null;
-		ResultSet rs = null;
-		
-		try {
-			String query = "SELECT originalLocation FROM `" + userID + "` WHERE eventName = '" + eventName + "';"; 
-			System.out.println(query);  //for debug
-			
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
-			
-			while(rs.next())
-				originalLocation = rs.getString(1);
-					
-		} catch(SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			ex.printStackTrace();
-			
-		} finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				} catch(SQLException ex) {
-					System.out.println("SQLException: " + ex.getMessage());
-					ex.printStackTrace();
-				}
-				
-				rs = null;
-			}
-			
-			if(stmt != null) {
-				try {
-					stmt.close();
-				}catch(SQLException ex) {
-					System.out.println("SQLException: " + ex.getMessage());
-					ex.printStackTrace();
-				}
-			}
-		}
-		
-		return originalLocation;	
-	}
-
-	
-	
-	
-	/**
 	 * Given an eventName, this function returns the location of the event.
 	 * 
 	 * @param userID
@@ -1025,99 +962,97 @@ public class SmartCalendar {
 	
 
 	
-//	/**
-//	 * This method put an event information into the database for a certain user.
-//	 * Does not include repeatEndTime and description in this method.
-//	 * 
-//	 * @param userID			user's email
-//	 * @param eventName
-//	 * @param allDayEvent
-//	 * @param startTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param endTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param eventRepeat
-//	 * @param travelTime		int (in minutes): the needed time to travel to event location
-//	 * @param location
-//	 * @param alert
-//	 * @param trafficCheck
-//	 * @param conn
-//	 */
-//	public static void postUserCalendar(String userID, String eventName, int allDayEvent, String startTime, String endTime, String eventRepeat,
-//			int travelTime, String location, int alert, int trafficCheck, Connection conn) {
-//		
-//		Statement stmt = null;
-//		
-//		try {
-//			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, travelTime, location, alert, trafficCheck) "
-//					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
-//					+ " '" + endTime + "', '" + eventRepeat + "', '" + travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "');";
-//			
-//			System.out.println(query);  //for debug
-//			stmt = conn.createStatement();
-//			stmt.executeUpdate(query);
-//			
-//		} catch(SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			ex.printStackTrace();
-//		} finally {
-//			if(stmt != null) {
-//				try {
-//					stmt.close();
-//				}catch(SQLException ex) {
-//					System.out.println("SQLException: " + ex.getMessage());
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+	/**
+	 * This method put an event information into the database for a certain user.
+	 * Does not include repeatEndTime and description in this method.
+	 * 
+	 * @param userID			user's email
+	 * @param eventName
+	 * @param allDayEvent
+	 * @param startTime			String format "YYYY-MM-DD HH:MI:SS.0000"
+	 * @param endTime			String format "YYYY-MM-DD HH:MI:SS.0000"
+	 * @param eventRepeat
+	 * @param travelTime		int (in minutes): the needed time to travel to event location
+	 * @param location
+	 * @param alert
+	 * @param trafficCheck
+	 * @param conn
+	 */
+	public static void postUserCalendar(String userID, String eventName, int allDayEvent, String startTime, String endTime, String eventRepeat,
+			int travelTime, String location, int alert, int trafficCheck, Connection conn) {
+		
+		Statement stmt = null;
+		
+		try {
+			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, travelTime, location, alert, trafficCheck) "
+					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
+					+ " '" + endTime + "', '" + eventRepeat + "', '" + travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "');";
+			
+			System.out.println(query);  //for debug
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+			
+		} catch(SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			if(stmt != null) {
+				try {
+					stmt.close();
+				}catch(SQLException ex) {
+					System.out.println("SQLException: " + ex.getMessage());
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
 	
-	
-	
-//	/**
-//	 * This method put an event FULL information into the database for a certain user.
-//	 * Include repeatEndTime and description in this method.
-//	 * 
-//	 * @param userID				user's email
-//	 * @param eventName
-//	 * @param allDayEvent
-//	 * @param startTime				String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param endTime				String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param eventRepeat
-//	 * @param repeatEndTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param travelTime
-//	 * @param location
-//	 * @param alert
-//	 * @param trafficCheck
-//	 * @param description
-//	 * @param conn
-//	 */
-//	public static void postFullUserCalendar(String userID, String eventName, int allDayEvent, String startTime, String endTime, String eventRepeat,
-//			String repeatEndTime, int travelTime, String location, int alert, int trafficCheck, String description, Connection conn) {
-//		
-//		Statement stmt = null;
-//		
-//		try {
-//			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, repeatEndTime, travelTime, location, alert, trafficCheck, description) "
-//					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
-//					+ " '" + endTime + "', '" + eventRepeat + "', '" + "repeatEndTime, '"+ travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "', " + description + "');";
-//			
-//			System.out.println(query);  //for debug
-//			stmt = conn.createStatement();
-//			stmt.executeUpdate(query);
-//			
-//		} catch(SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			ex.printStackTrace();
-//		} finally {
-//			if(stmt != null) {
-//				try {
-//					stmt.close();
-//				}catch(SQLException ex) {
-//					System.out.println("SQLException: " + ex.getMessage());
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+	/**
+	 * This method put an event FULL information into the database for a certain user.
+	 * Include repeatEndTime and description in this method.
+	 * 
+	 * @param userID				user's email
+	 * @param eventName
+	 * @param allDayEvent
+	 * @param startTime				String format "YYYY-MM-DD HH:MI:SS.0000"
+	 * @param endTime				String format "YYYY-MM-DD HH:MI:SS.0000"
+	 * @param eventRepeat
+	 * @param repeatEndTime			String format "YYYY-MM-DD HH:MI:SS.0000"
+	 * @param travelTime
+	 * @param location
+	 * @param alert
+	 * @param trafficCheck
+	 * @param description
+	 * @param conn
+	 */
+	public static void postFullUserCalendar(String userID, String eventName, int allDayEvent, String startTime, String endTime, String eventRepeat,
+			String repeatEndTime, int travelTime, String location, int alert, int trafficCheck, String description, Connection conn) {
+		
+		Statement stmt = null;
+		
+		try {
+			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, repeatEndTime, travelTime, location, alert, trafficCheck, description) "
+					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
+					+ " '" + endTime + "', '" + eventRepeat + "', '" + "repeatEndTime, '"+ travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "', " + description + "');";
+			
+			System.out.println(query);  //for debug
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+			
+		} catch(SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			if(stmt != null) {
+				try {
+					stmt.close();
+				}catch(SQLException ex) {
+					System.out.println("SQLException: " + ex.getMessage());
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	
 	/**
@@ -1138,8 +1073,7 @@ public class SmartCalendar {
 	 *  	location: 		..., 	//String
 	 *  	alert:			..., 	//int,												Not Null
 	 *  	trafficCheck:	..., 	//int, 												Not Null
-	 *  	description:	...,	//String
-	 *  	originalLocation: ...	//String
+	 *  	description:	...		//String
 	 * }
 	 * 
 	 * @param conn
@@ -1160,11 +1094,10 @@ public class SmartCalendar {
 			int alert = userEvent.getInt("alert");
 			int trafficCheck = userEvent.getInt("trafficCheck");
 			String description = userEvent.getString("description");		//nullable
-			String originalLocation = userEvent.getString("originalLocation"); //nullable
 			
-			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, repeatEndTime, travelTime, location, alert, trafficCheck, description, originalLocation) "
+			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, repeatEndTime, travelTime, location, alert, trafficCheck, description) "
 					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
-					+ " '" + endTime + "', '" + eventRepeat + "', '" + repeatEndTime + "', '" + travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "', '" + description + "', '" + originalLocation + "');";
+					+ " '" + endTime + "', '" + eventRepeat + "', '" + repeatEndTime + "', '" + travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "', " + description + "');";
 			
 			System.out.println(query);  //for debug
 			stmt = conn.createStatement();
