@@ -114,13 +114,53 @@ public class SmartCalendar {
 //		System.out.println(alert);
 		
 		
+		
 		/*
-		 * this is to test the method postUserCalendar(...)
+		 * this is to test the method postFullUserCalendar(...)
 		 */
-//		postUserCalendar("smartcalendartestuser@gmail.com", "swimming", 1, "1990-03-10 05:30:00.0000", "2020-03-13 05:40:00.0000", "Yearly", 50,
-//				"Krispy Kreme", 1, 0, conn);
+//		postFullUserCalendar("smartcalendartestuser@gmail.com", "swimming", 1, "1990-03-10 05:30:00.0000", "1990-03-10 07:30:00.0000", "Yearly", "2070-03-10 05:30:00.0000", 50,
+//				"Krispy Kreme", 1, 0, "Birthday celebration", conn);
 		
 		
+		/**
+		 * {
+	 *  	eventName: 		...,   	//String, 											Not Null
+	 *  	allDayEvent:	..., 	//int, 												Not Null
+	 *  	startTime:		..., 	//String in format "YYYY-MM-DD HH:MI:SS.0000", 		Not Null
+	 *  	endTime:		..., 	//String in format "YYYY-MM-DD HH:MI:SS.0000", 		Not Null
+	 *  	eventRepeat:	..., 	//String ("None", "Weekly", "Monthly", "Yearly"), 	Not Null
+	 *  	repeatEndTime:	..., 	//String in format "YYYY-MM-DD HH:MI:SS.0000"
+	 *  	travelTime:		...,	//int (travel time in minutes),						Not Null
+	 *  	location: 		..., 	//String
+	 *  	alert:			..., 	//int,												Not Null
+	 *  	trafficCheck:	..., 	//int, 												Not Null
+	 *  	description:	...,	//String
+	 *  	originalLocation: ...	//String
+	 * }
+		 */
+		
+		/*
+		 * this is to test the method postFullUserCalendar(String userID, JSONObject userEvent, Connection conn)
+		 */
+		JSONObject exampleJson = new JSONObject();
+		try {
+			exampleJson.put("eventName", "exampleEventName");
+			exampleJson.put("allDayEvent", 0);
+			exampleJson.put("startTime", "1990-03-13 05:30:00.0000");
+			exampleJson.put("endTime", "1990-03-13 08:30:00.0000");
+			exampleJson.put("eventRepeat", "Yearly");
+			exampleJson.put("repeatEndTime", "2070-03-13 08:30:00.0000");
+			exampleJson.put("travelTime", 10);
+			exampleJson.put("location", "New York, NY,USA");
+			exampleJson.put("alert", 0);
+			exampleJson.put("trafficCheck", 0);
+			exampleJson.put("description", "exmaple description");
+			exampleJson.put("originalLocation", "Washington,DC,USA");
+		} catch (JSONException e) {
+			System.out.println("JSONException: " + e.getMessage());
+			e.printStackTrace();
+		}
+//		postFullUserCalendar("smartcalendartestuser@gmail.com", exampleJson, conn);
 	
 		
 		//Following disconnect our program to the database.  
@@ -1023,53 +1063,6 @@ public class SmartCalendar {
 		return shouldAlert;	
 	}
 	
-
-	
-//	/**
-//	 * This method put an event information into the database for a certain user.
-//	 * Does not include repeatEndTime and description in this method.
-//	 * 
-//	 * @param userID			user's email
-//	 * @param eventName
-//	 * @param allDayEvent
-//	 * @param startTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param endTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param eventRepeat
-//	 * @param travelTime		int (in minutes): the needed time to travel to event location
-//	 * @param location
-//	 * @param alert
-//	 * @param trafficCheck
-//	 * @param conn
-//	 */
-//	public static void postUserCalendar(String userID, String eventName, int allDayEvent, String startTime, String endTime, String eventRepeat,
-//			int travelTime, String location, int alert, int trafficCheck, Connection conn) {
-//		
-//		Statement stmt = null;
-//		
-//		try {
-//			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, travelTime, location, alert, trafficCheck) "
-//					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
-//					+ " '" + endTime + "', '" + eventRepeat + "', '" + travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "');";
-//			
-//			System.out.println(query);  //for debug
-//			stmt = conn.createStatement();
-//			stmt.executeUpdate(query);
-//			
-//		} catch(SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			ex.printStackTrace();
-//		} finally {
-//			if(stmt != null) {
-//				try {
-//					stmt.close();
-//				}catch(SQLException ex) {
-//					System.out.println("SQLException: " + ex.getMessage());
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//	}
-	
 	
 	
 //	/**
@@ -1083,7 +1076,7 @@ public class SmartCalendar {
 //	 * @param endTime				String format "YYYY-MM-DD HH:MI:SS.0000"
 //	 * @param eventRepeat
 //	 * @param repeatEndTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param travelTime
+//	 * @param travelTime			
 //	 * @param location
 //	 * @param alert
 //	 * @param trafficCheck
