@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
@@ -21,14 +23,14 @@ public class SmartCalendar {
 		/*
 		 * this is to test the method getUserCalendar(...)
 		 */
-		String testUserCalendar = getUserCalendar("smartcalendartestuser@gmail.com", conn).toString();
-		System.out.println(testUserCalendar);
+//		String testUserCalendar = getUserCalendar("smartcalendartestuser@gmail.com", conn).toString();
+//		System.out.println(testUserCalendar);
 		
 		/*
 		 * this is to test the method getSimpleUserCalendar(...)
 		 */
-//		String getSimpleUserCalendar = getSimpleUserCalendar("smartcalendartestuser@gmail.com", conn).toString();
-//		System.out.println(getSimpleUserCalendar);
+		String getSimpleUserCalendar = getSimpleUserCalendar("smartcalendartestuser@gmail.com", conn).toString();
+		System.out.println(getSimpleUserCalendar);
 		
 		
 		/*
@@ -112,15 +114,7 @@ public class SmartCalendar {
 //		boolean shouldAlert = ifShouldAlert("smartcalendartestuser@gmail.com", "Movie Night", conn);
 //		String alert = (shouldAlert) ? "true" : "false";
 //		System.out.println(alert);
-		
-		
-		
-		/*
-		 * this is to test the method postFullUserCalendar(...)
-		 */
-//		postFullUserCalendar("smartcalendartestuser@gmail.com", "swimming", 1, "1990-03-10 05:30:00.0000", "1990-03-10 07:30:00.0000", "Yearly", "2070-03-10 05:30:00.0000", 50,
-//				"Krispy Kreme", 1, 0, "Birthday celebration", conn);
-		
+			
 		
 		/**
 		 * {
@@ -142,25 +136,30 @@ public class SmartCalendar {
 		/*
 		 * this is to test the method postFullUserCalendar(String userID, JSONObject userEvent, Connection conn)
 		 */
-		JSONObject exampleJson = new JSONObject();
-		try {
-			exampleJson.put("eventName", "exampleEventName");
-			exampleJson.put("allDayEvent", 0);
-			exampleJson.put("startTime", "1990-03-13 05:30:00.0000");
-			exampleJson.put("endTime", "1990-03-13 08:30:00.0000");
-			exampleJson.put("eventRepeat", "Yearly");
-			exampleJson.put("repeatEndTime", "2070-03-13 08:30:00.0000");
-			exampleJson.put("travelTime", 10);
-			exampleJson.put("location", "New York, NY,USA");
-			exampleJson.put("alert", 0);
-			exampleJson.put("trafficCheck", 0);
-			exampleJson.put("description", "exmaple description");
-			exampleJson.put("originalLocation", "Washington,DC,USA");
-		} catch (JSONException e) {
-			System.out.println("JSONException: " + e.getMessage());
-			e.printStackTrace();
-		}
+//		JSONObject exampleJson = new JSONObject();
+//		try {
+//			exampleJson.put("eventName", "exampleEventName");
+//			exampleJson.put("allDayEvent", 0);
+//			exampleJson.put("startTime", "1990-03-13 05:30:00.0000");
+//			exampleJson.put("endTime", "1990-03-13 08:30:00.0000");
+//			exampleJson.put("eventRepeat", "Yearly");
+//			exampleJson.put("repeatEndTime", "2070-03-13 08:30:00.0000");
+//			exampleJson.put("travelTime", 10);
+//			exampleJson.put("location", "New York, NY,USA");
+//			exampleJson.put("alert", 0);
+//			exampleJson.put("trafficCheck", 0);
+//			exampleJson.put("description", "exmaple description");
+//			exampleJson.put("originalLocation", "Washington,DC,USA");
+//		} catch (JSONException e) {
+//			System.out.println("JSONException: " + e.getMessage());
+//			e.printStackTrace();
+//		}
 //		postFullUserCalendar("smartcalendartestuser@gmail.com", exampleJson, conn);
+		
+		
+		
+//		String testUserInfo = getUserCalendarAfterTime("smartcalendartestuser@gmail.com", "2016-11-01 00:00:00.0000", conn).toString();
+//		System.out.println(testUserInfo);
 	
 		
 		//Following disconnect our program to the database.  
@@ -203,7 +202,7 @@ public class SmartCalendar {
 	}
 	
 	/**
-	 * Given the userID, this method return all events information in a JSONObject in format:
+	 * Given the userID, this method return all events information (after current time) in a JSONObject in format:
 	 * {
 	 * 		"events" : [
 	 * 				{
@@ -223,71 +222,16 @@ public class SmartCalendar {
 	 * @return
 	 */
 	public static JSONObject getSimpleUserCalendar(String userID, Connection conn) {
-		Statement stmt = null;
-		ResultSet rs = null;
 		
-		JSONObject userCalendar = new JSONObject();
-		JSONArray jsonArr = new JSONArray();
+		String curTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0000").format(Calendar.getInstance().getTime());
 		
-		try {
-			String query = "SELECT eventName, startTime FROM `" + userID + "`;";
-			System.out.println(query);  //for debug
-			
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
-			
-//			ResultSetMetaData metaData = rs.getMetaData();
-//			int columns = metaData.getColumnCount();  //columns == 2 here
-			
-			while(rs.next()) {
-				JSONObject jsonTmp = new JSONObject();
-				jsonTmp.put("eventName", rs.getString(1));
-				
-				String[] tmp = new String[2];
-				tmp = rs.getString(2).split(" ");
-				jsonTmp.put("startTime", tmp[1]);
-				jsonTmp.put("date", tmp[0]);
-				
-				jsonArr.put(jsonTmp);
-			}
-			userCalendar.put("events", jsonArr);
-			
-		} catch(SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			ex.printStackTrace();
-			
-		} catch (JSONException e) {
-			System.out.println("JSONException: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				} catch(SQLException ex) {
-					System.out.println("SQLException: " + ex.getMessage());
-					ex.printStackTrace();
-				}
-				
-				rs = null;
-			}
-			
-			if(stmt != null) {
-				try {
-					stmt.close();
-				}catch(SQLException ex) {
-					System.out.println("SQLException: " + ex.getMessage());
-					ex.printStackTrace();
-				}
-			}
-		}
-		
-		return userCalendar;
+		return getUserCalendarAfterTime(userID, curTime, conn);
 	}
 	
 	
 	
 	/**
-	 * Given the userID, this method return all events information in a JSONObject in format:
+	 * Given the userID, this method return all events (after current time) information in a JSONObject in format:
 	 * {
 	 * 		"events" : [
 	 * 				{
@@ -323,20 +267,18 @@ public class SmartCalendar {
 		JSONArray jsonArr = new JSONArray();
 		
 		try {
-			String query = "SELECT * FROM `" + userID + "`;";
+			String curTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0000").format(Calendar.getInstance().getTime());	
+			String query = "SELECT * FROM `" + userID + "` WHERE startTime >= '" + curTime + "';";
+
 			System.out.println(query);  //for debug
 			
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 			
-//			ResultSetMetaData metaData = rs.getMetaData();
-//			int columns = metaData.getColumnCount();  //columns == # of columns in user table
-			
 			while(rs.next()) {
 				JSONObject jsonTmp = new JSONObject();
 				jsonTmp.put("eventName", rs.getString(2));
-				jsonTmp.put("allDayEvent", rs.getInt(3));		//this will return 1/0
-//				jsonTmp.put("allDayEvent", rs.getObject(3));   	//this will return "true"/"false"
+				jsonTmp.put("allDayEvent", rs.getInt(3));		
 				jsonTmp.put("startTime", rs.getString(4));
 				jsonTmp.put("endTime", rs.getString(5));
 				jsonTmp.put("eventRepeat", rs.getString(6));
@@ -344,9 +286,7 @@ public class SmartCalendar {
 				jsonTmp.put("travelTime", rs.getInt(8));
 				jsonTmp.put("location", rs.getString(9));
 				jsonTmp.put("alert", rs.getInt(10));
-//				jsonTmp.put("alert", rs.getObject(10));
 				jsonTmp.put("trafficCheck", rs.getInt(11));
-//				jsonTmp.put("trafficCheck", rs.getObject(11));
 				jsonTmp.put("description", rs.getString(12));
 				jsonTmp.put("originalLocation", rs.getString(13));
 				
@@ -469,6 +409,72 @@ public class SmartCalendar {
 		
 		try {
 			String query = "SELECT eventName, startTime FROM `" + userID + "` WHERE startTime <= '" + dueTime + "';"; 
+			System.out.println(query);  //for debug
+			
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+			
+			ResultSetMetaData metaData = rs.getMetaData();
+			int columns = metaData.getColumnCount(); //actually, columns == 2 cuz we select two cols in query
+			
+			while(rs.next()) {
+				jsonResult.put(rs.getString(1), rs.getString(columns)); //note: actually, columns == 2 we already know
+			}
+						
+		} catch(SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			ex.printStackTrace();
+			
+		} catch (JSONException e) {
+			System.out.println("JSONException: " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch(SQLException ex) {
+					System.out.println("SQLException: " + ex.getMessage());
+					ex.printStackTrace();
+				}
+				
+				rs = null;
+			}
+			
+			if(stmt != null) {
+				try {
+					stmt.close();
+				}catch(SQLException ex) {
+					System.out.println("SQLException: " + ex.getMessage());
+					ex.printStackTrace();
+				}
+			}
+		}
+		
+		return jsonResult;	
+	}
+	
+	
+	
+	/**
+	 * This method get eventName and corresponding startTime from database of a certain user after a certain time.
+	 * 
+	 * @param userID
+	 * @param dueTime
+	 * @param conn
+	 * 
+	 * @return String formatted in "event1: startTime1 
+	 * 								event2: startTime2 
+	 * 								event3: startTime3 
+	 * 								..."
+	 */
+	public static JSONObject getUserCalendarAfterTime(String userID, String curTime, Connection conn) {
+		
+		Statement stmt = null;
+		ResultSet rs = null;
+		JSONObject jsonResult = new JSONObject();
+		
+		try {
+			String query = "SELECT eventName, startTime FROM `" + userID + "` WHERE startTime >= '" + curTime + "';"; 
 			System.out.println(query);  //for debug
 			
 			stmt = conn.createStatement();
@@ -1062,55 +1068,7 @@ public class SmartCalendar {
 		
 		return shouldAlert;	
 	}
-	
-	
-	
-//	/**
-//	 * This method put an event FULL information into the database for a certain user.
-//	 * Include repeatEndTime and description in this method.
-//	 * 
-//	 * @param userID				user's email
-//	 * @param eventName
-//	 * @param allDayEvent
-//	 * @param startTime				String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param endTime				String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param eventRepeat
-//	 * @param repeatEndTime			String format "YYYY-MM-DD HH:MI:SS.0000"
-//	 * @param travelTime			
-//	 * @param location
-//	 * @param alert
-//	 * @param trafficCheck
-//	 * @param description
-//	 * @param conn
-//	 */
-//	public static void postFullUserCalendar(String userID, String eventName, int allDayEvent, String startTime, String endTime, String eventRepeat,
-//			String repeatEndTime, int travelTime, String location, int alert, int trafficCheck, String description, Connection conn) {
-//		
-//		Statement stmt = null;
-//		
-//		try {
-//			String query = "INSERT INTO cmpe281projectdatabase.`" + userID + "`(eventName, allDayEvent, startTime, endTime, eventRepeat, repeatEndTime, travelTime, location, alert, trafficCheck, description) "
-//					+ " VALUES ('" + eventName + "', '" + allDayEvent + "', '" + startTime + "',"
-//					+ " '" + endTime + "', '" + eventRepeat + "', '" + "repeatEndTime, '"+ travelTime + "', '" + location + "', '" + alert +  "', '" + trafficCheck + "', " + description + "');";
-//			
-//			System.out.println(query);  //for debug
-//			stmt = conn.createStatement();
-//			stmt.executeUpdate(query);
-//			
-//		} catch(SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			ex.printStackTrace();
-//		} finally {
-//			if(stmt != null) {
-//				try {
-//					stmt.close();
-//				}catch(SQLException ex) {
-//					System.out.println("SQLException: " + ex.getMessage());
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+
 	
 	
 	/**
