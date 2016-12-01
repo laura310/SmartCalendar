@@ -159,10 +159,6 @@ public class SmartCalendar {
 //		}
 //		postFullUserCalendar("smartcalendartestuser@gmail.com", exampleJson, conn);
 		
-		
-		
-//		String testUserInfo = getUserCalendarAfterTime("smartcalendartestuser@gmail.com", "2016-11-01 00:00:00.0000", conn).toString();
-//		System.out.println(testUserInfo);
 	
 		
 		//Following disconnect our program to the database.  
@@ -262,74 +258,6 @@ public class SmartCalendar {
 	 * @param conn
 	 * @return
 	 */
-//	// modification for "Yearly"
-//	public static JSONObject getUserCalendar(String userID, Connection conn) {
-//		Statement stmt = null;
-//		ResultSet rs = null;
-//		
-//		JSONObject userCalendar = new JSONObject();
-//		JSONArray jsonArr = new JSONArray();
-//		
-//		try {
-//			String curTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0000").format(Calendar.getInstance().getTime());	
-//			String query = "SELECT * FROM `" + userID + "` WHERE endTime >= '" + curTime + "';";
-//
-//			System.out.println(query);  //for debug
-//			
-//			stmt = conn.createStatement();
-//			rs = stmt.executeQuery(query);
-//			
-//			while(rs.next()) {
-//				JSONObject jsonTmp = new JSONObject();
-//				jsonTmp.put("eventName", rs.getString(2));
-//				jsonTmp.put("allDayEvent", rs.getInt(3));		
-//				jsonTmp.put("startTime", rs.getString(4));
-//				jsonTmp.put("endTime", rs.getString(5));
-//				jsonTmp.put("eventRepeat", rs.getString(6));
-//				jsonTmp.put("repeatEndTime", rs.getString(7));
-//				jsonTmp.put("travelTime", rs.getInt(8));
-//				jsonTmp.put("location", rs.getString(9));
-//				jsonTmp.put("alert", rs.getInt(10));
-//				jsonTmp.put("trafficCheck", rs.getInt(11));
-//				jsonTmp.put("description", rs.getString(12));
-//				jsonTmp.put("originalLocation", rs.getString(13));
-//				
-//				jsonArr.put(jsonTmp);
-//			}
-//			userCalendar.put("events", jsonArr);
-//			
-//		} catch(SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			ex.printStackTrace();
-//			
-//		} catch (JSONException e) {
-//			System.out.println("JSONException: " + e.getMessage());
-//			e.printStackTrace();
-//		} finally {
-//			if(rs != null) {
-//				try {
-//					rs.close();
-//				} catch(SQLException ex) {
-//					System.out.println("SQLException: " + ex.getMessage());
-//					ex.printStackTrace();
-//				}
-//				
-//				rs = null;
-//			}
-//			
-//			if(stmt != null) {
-//				try {
-//					stmt.close();
-//				}catch(SQLException ex) {
-//					System.out.println("SQLException: " + ex.getMessage());
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//		
-//		return userCalendar;
-//	}
-	// modification for "Yearly"
 		public static JSONObject getUserCalendar(String userID, Connection conn) {
 			Statement stmt = null;
 			ResultSet rs = null;
